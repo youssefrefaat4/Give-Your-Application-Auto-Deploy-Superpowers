@@ -68,7 +68,7 @@ jobs:
       - image: node
     steps:
       - checkout
-      - attach-workspace:
+      - attach_workspace:
           at: ./
       - run:
           name: Run unit test
