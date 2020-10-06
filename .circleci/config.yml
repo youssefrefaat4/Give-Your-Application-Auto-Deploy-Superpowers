@@ -26,12 +26,15 @@ jobs:
     docker:
       - image: node
     steps:
-      - checkout
-           
+      - checkout   
       - run:
           name: "compile and build"
           command: |
              cd ~/project/frontend && npm i && npm run build
+      - persist_to_workspace:
+          root:  ~/
+          paths:
+             - ~/project/frontend/node_modules  
              
   build-backend:
     docker:
@@ -49,6 +52,8 @@ jobs:
       - image: node
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Run unit test
           command: |
