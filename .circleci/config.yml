@@ -65,3 +65,4 @@ workflows:
   default:
     jobs:
       - hello-world
+      - build-frontend
