@@ -33,6 +33,15 @@ jobs:
           command: |
              cd ~/project/frontend && npm i && npm run build
              
+  build-backend:
+    docker:
+      - image: node
+    steps:
+      - checkout
+      - run:
+          name: "compile and build"
+          command: |
+             cd ~/project/backend && npm i && npm run build
 
 #  build-frontend:
 
@@ -63,3 +72,4 @@ workflows:
     jobs:
       # - hello-world
       - build-frontend
+      - build-backend
