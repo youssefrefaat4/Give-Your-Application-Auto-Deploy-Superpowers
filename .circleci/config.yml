@@ -27,14 +27,11 @@ jobs:
       - image: node
     steps:
       - checkout
-      - run:
-          name: "Go to front end directory"
-          command: |
-             cd ~/project/frontend
+           
       - run:
           name: "compile and build"
           command: |
-              npm run build
+             cd ~/project/frontend | npm run build
              
 
 #  build-frontend:
@@ -64,5 +61,5 @@ jobs:
 workflows:
   default:
     jobs:
-      - hello-world
+      # - hello-world
       - build-frontend
