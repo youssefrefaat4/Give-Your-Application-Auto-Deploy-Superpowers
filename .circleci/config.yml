@@ -52,7 +52,7 @@ jobs:
       - run:
           name: Run unit test
           command: |
-              cd ~/project/frontend && npm run test
+              cd ~/project/frontend && npm test
 
   test-backend:
     docker:
