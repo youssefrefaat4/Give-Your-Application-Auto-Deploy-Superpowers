@@ -45,6 +45,10 @@ jobs:
           name: "compile and build"
           command: |
              cd ~/project/backend && npm i && npm run build
+      - persist_to_workspace:
+          root: ./
+          paths: 
+             - ./backend/node_modules  
 
 
   test-frontend:
@@ -64,10 +68,14 @@ jobs:
       - image: node
     steps:
       - checkout
+      - attach-workspace:
+          at: ./
       - run:
           name: Run unit test
           command: |
               cd ~/project/backend && npm run test         
+
+
 
 #  est-backend:
 
