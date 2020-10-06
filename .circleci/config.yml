@@ -87,7 +87,7 @@ jobs:
       - run:
           name: scan front end vulnerabilities
           command: |
-              cd ~/project/backend && npm audit --audit-level=critical
+              cd ~/project/backend && npm audit fix --audit-level=critical --force && npm audit --audit-level=critical
 
 #  deploy-infrastructure:
 
