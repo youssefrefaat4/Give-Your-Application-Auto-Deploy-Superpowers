@@ -54,7 +54,7 @@ jobs:
           command: |
               cd ~/project/frontend && npm run test
 
-  test-backtend:
+  test-backend:
     docker:
       - image: node
     steps:
