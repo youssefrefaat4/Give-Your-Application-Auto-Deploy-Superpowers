@@ -22,7 +22,20 @@ jobs:
           command: |
             echo "Hello World"
 
-#  build-frontend:
+  build-frontend:
+    docker:
+      - image: node
+    steps:
+      - checkout
+      - run:
+          name: "Go to front end directory"
+          command: |
+             cd ~/frontend
+      - run:
+          name: "compile and build"
+          command: |
+              npm run build
+             
 
 #  build-frontend:
 
