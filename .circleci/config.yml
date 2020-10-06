@@ -12,16 +12,6 @@ version: 2.1
 #     ...
 
 jobs:
-  hello-world: # Delete this job when you get started
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Say Hello
-          command: |
-            echo "Hello World"
-
   build-frontend:
     docker:
       - image: node
@@ -75,13 +65,29 @@ jobs:
           command: |
               cd ~/project/backend && npm run test         
 
+  scan-frontend:
+    docker:
+      - image: node
+    steps::
+      - checkcout
+      - attach_workspace:
+          at: ./
+      - run:
+          name: scan front end vulnerabilities
+          command: |
+              cd ~/project/frontend && npm audit --audit-level=critical
 
-
-#  est-backend:
-
-#  can-frontend:
-
-#  scan-backend:
+  scan-backend:
+    docker:
+      - image: node
+    steps::
+      - checkcout
+      - attach_workspace:
+          at: ./
+      - run:
+          name: scan front end vulnerabilities
+          command: |
+              cd ~/project/backend && npm audit --audit-level=critical
 
 #  deploy-infrastructure:
 
