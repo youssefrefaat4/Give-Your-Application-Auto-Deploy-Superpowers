@@ -30,7 +30,7 @@ jobs:
       - run:
           name: "compile and build"
           command: |
-             cd ~/project/frontend && npm i && npm run build
+             ls ./
       - persist_to_workspace:
           root: ./
           paths:
