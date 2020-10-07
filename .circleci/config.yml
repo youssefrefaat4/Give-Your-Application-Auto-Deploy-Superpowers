@@ -129,7 +129,7 @@ jobs:
       - run: 
           name: Configure server
           command: |
-                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i .circleci/inventory.txt .circleci/configure-server/playbook.yml 
+                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i .circleci/files/inventory.txt .circleci/ansible/roles/configure-server/playbook.yml 
 
 
 
@@ -137,9 +137,7 @@ jobs:
 
 #  run-migrations:
 
-  
-
-#  deploy-backend:  
+#  deploy-frontend:  
 
 #  smoke-test:
 
