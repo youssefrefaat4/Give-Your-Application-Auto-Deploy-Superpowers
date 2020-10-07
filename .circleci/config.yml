@@ -97,7 +97,7 @@ jobs:
       - run:
           name: create stack for backend
           command: |
-              aws cloudformation create-stack --stack-name udacity-projectII --template-body file://~/project/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
+              aws cloudformation create-stack --stack-name udacity-projectII --template-body file://~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
 
 #  configure-infrastructure:
 
