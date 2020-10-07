@@ -97,7 +97,7 @@ jobs:
       - run:
           name: create stack for backend
           command: |
-              aws cloudformation create-stack --stack-name "udapeople-backend_${CIRCLE_WORKFLOW_ID}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}" --template-body file://~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
+              aws cloudformation create-stack --stack-name "udapeople-backend_${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" --template-body file://~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
 
 #  configure-infrastructure:
 
