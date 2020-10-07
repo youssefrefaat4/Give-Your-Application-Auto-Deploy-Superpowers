@@ -89,7 +89,7 @@ jobs:
           command: |
               cd ~/project/backend && npm audit fix --audit-level=critical --force && npm audit --audit-level=critical
 
-  deploy-infrastructure:
+  configure-infrastructure:
     docker:
       - image: amazon/aws-cli
     steps: 
@@ -108,7 +108,27 @@ jobs:
       - run:
           name: save s3 arn bucket
           command: |
-              curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "arn:PARTITION:s3:::$(frontend${CIRCLE_WORKFLOW_ID:0:7})" https://api.memstash.io/values/s3bucket      
+              curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "arn:PARTITION:s3:::frontend${CIRCLE_WORKFLOW_ID:0:7}" https://api.memstash.io/values/s3bucket      
+
+  deploy-frontend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps: 
+      - checkout 
+      - add_ssh_keys:
+           fingerprints: ["28:3e:56:65:72:cb:2f:83:41:5b:bd:d4:d5:21:17:e9"]
+      - run:
+          name: Install dependencies
+          command: |
+                apk add --update ansible
+      - run: 
+          name: disbale ssh checking
+          command: |
+                export ANSIBLE_HOST_KEY_CHECKING=False
+      - run: 
+          name: Configure server
+          command: |
+                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i .circleci/inventory.txt .circleci/configure-server/playbook.yml 
 
 
 
@@ -116,7 +136,7 @@ jobs:
 
 #  run-migrations:
 
-#  deploy-frontend:
+  
 
 #  deploy-backend:  
 
@@ -127,6 +147,7 @@ jobs:
 workflows:
   default:
     jobs:
+      - deploy-backend
       # - hello-world
       # - build-frontend
       # - build-backend
@@ -142,4 +163,5 @@ workflows:
       # - scan-backend:
       #     requires:
       #        - test-backend
-      - deploy-infrastructure             
+      # - configure-infrastructure
+

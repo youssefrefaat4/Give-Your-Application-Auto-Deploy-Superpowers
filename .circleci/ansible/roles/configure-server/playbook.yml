@@ -1,0 +1,21 @@
+- name: setup backend server
+  hosts: all
+  user: ubuntu
+  tasks:
+    - name: "Update package"
+      become: yes
+      apt: 
+        update_cache: yes
+
+    - name: "Upgrade package"
+      become: yes
+      apt:
+        upgrade: yes
+
+    - name: "Install node js"
+      shell: |
+        curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs
+
+    - name: "Install pm2"
+      shell: |
+         npm install pm2 -g
