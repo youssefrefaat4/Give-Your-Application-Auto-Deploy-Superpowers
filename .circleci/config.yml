@@ -89,7 +89,15 @@ jobs:
           command: |
               cd ~/project/backend && npm audit fix --audit-level=critical --force && npm audit --audit-level=critical
 
-#  deploy-infrastructure:
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps: 
+      - checkout
+      - run:
+          name: create stack for backend
+          command: |
+              aws cloudformation create-stack --stack-name udacity-projectII --template-body file://~/project/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
 
 #  configure-infrastructure:
 
@@ -107,17 +115,18 @@ workflows:
   default:
     jobs:
       # - hello-world
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires:
-             - build-frontend
-      - test-backend:
-          requires:
-             - build-backend
-      - scan-frontend:
-          requires:
-             - test-frontend
-      - scan-backend:
-          requires:
-             - test-backend             
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires:
+      #        - build-frontend
+      # - test-backend:
+      #     requires:
+      #        - build-backend
+      # - scan-frontend:
+      #     requires:
+      #        - test-frontend
+      # - scan-backend:
+      #     requires:
+      #        - test-backend
+      - deploy-infrastructure             
