@@ -151,9 +151,11 @@ jobs:
 
   deploy-backend-andmovecode:
       docker:
-        - image: node
+        - image: python:3.7-alpine3.11
       steps:
         - checkout
+        - add_ssh_keys:
+           fingerprints: ["28:3e:56:65:72:cb:2f:83:41:5b:bd:d4:d5:21:17:e9"]
         - attach_workspace:
             at: ./
         - run:
@@ -197,9 +199,9 @@ workflows:
       # - deploy-backend:
             # requires:
               #  - configure-infrastructure
-      - run-migrations:
-          requires:
-            - build-backend
+      # - run-migrations:
+      #     requires:
+      #       - build-backend
       - deploy-backend-andmovecode:
           requires:
             - build-backend
