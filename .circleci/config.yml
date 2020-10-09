@@ -39,6 +39,7 @@ jobs:
           root: ./
           paths: 
              - ./backend/node_modules  
+             - ./backend/dist
 
 
   test-frontend:
