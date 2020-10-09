@@ -180,7 +180,7 @@ workflows:
   default:
     jobs:
       # - build-frontend
-      # - build-backend
+      - build-backend
       # - test-frontend:
       #     requires:
       #        - build-frontend
@@ -198,6 +198,10 @@ workflows:
       # - deploy-backend:
             # requires:
               #  - configure-infrastructure
-      - run-migrations
-      - deploy-backend-andmovecode
+      - run-migrations:
+          requires:
+            - build-backend
+      - deploy-backend-andmovecode:
+          requires:
+            - build-backend
 
