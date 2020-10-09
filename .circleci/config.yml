@@ -165,6 +165,7 @@ jobs:
         - run:
             name: copy dist files ansible
             command: |
+                apk --no-cache add curl &&
                 echo [all] > ~/inventory.txt &&
                 curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips >> ~/inventory.txt && 
                 export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i ~/inventory.txt .circleci/ansible/roles/deploy/tasks/playbook.yml
