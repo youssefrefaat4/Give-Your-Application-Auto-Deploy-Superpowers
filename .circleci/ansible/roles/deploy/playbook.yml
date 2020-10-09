@@ -14,4 +14,4 @@
         remote_src: yes
     - name: run pm2
       shell: |
-        pm2 /tmp/dist/main.js
+        pm2  start /tmp/dist/main.js

@@ -218,7 +218,29 @@ jobs:
            command: aws s3 cp ~/project/frontend/dist s3://frontend${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
            
 
-#  smoke-test:
+  smoke-test:
+     docker:
+       - image: 
+     steps: 
+       - run:
+           name: smoketest for backend
+           command: | 
+                BACKEND_IP=$(aws ec2 describe-instances \
+                --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+                --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                --output text)
+                curl "http://${BACKEND_IP}:3030/api/status"
+
+       - run:
+           name: smoketest for frontend
+           command: | 
+                URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
+                if curl -s ${URL} | grep "Welcome"
+                then
+                return 1
+                else
+                return 0
+                fi
 
 #  cloudfront-update:
 
@@ -255,4 +277,8 @@ workflows:
       - copy-frontend-files-to-s3:
           requires:
              - deploy-frontend
+      - smoke-test:
+          requires:
+             - copy-frontend-files-to-s3
+             - deploy-backend-andmovecode
 
