@@ -187,8 +187,6 @@ jobs:
        - image: node
      steps:
        - checkout
-       - attach_workspace:
-           at: ./
        - run:
            name: export api url
            command: |
@@ -196,6 +194,11 @@ jobs:
        - run:
            name: deploy 
            command: cd ~/project/frontend && npm i && npm run build
+      - persist_to_workspace:
+          root: ./
+          paths:
+             - ./frontend/node_modules  
+             - ./frontend/dist
   
   copy-frontend-files-to-s3:
      docker:
