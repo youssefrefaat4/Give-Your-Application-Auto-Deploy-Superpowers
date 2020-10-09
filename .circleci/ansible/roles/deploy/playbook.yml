@@ -2,8 +2,8 @@
   hosts: all
   user: ubuntu
   tasks:
-    - name: "Update package"
+    - name: "copy files"
       become: yes
       copy: 
-        src: ../../../../backend/dist
+        src: ../../../../backend/dist/
         dest: /tmp/dist

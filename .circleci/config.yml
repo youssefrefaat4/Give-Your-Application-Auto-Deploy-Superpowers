@@ -225,10 +225,10 @@ workflows:
       - deploy-backend:
           requires:
              - configure-infrastructure
-      - run-migrations:
-          requires:
-             - build-backend
-      - deploy-backend-andmovecode:
+      # - run-migrations:
+      #     requires:
+      #        - build-backend
+      # - deploy-backend-andmovecode:
           requires:
              - build-backend
       - deploy-frontend:
