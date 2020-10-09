@@ -2,7 +2,7 @@
   hosts: all
   user: ubuntu
   tasks:
-     - name: copy dist files
-       become: yes
-       copy: ../../backend/dist
-       dest: /tmp/dist
+    - name: "Update package"
+      become: yes
+      copy: ../../backend/dist
+      dest: /tmp/dist

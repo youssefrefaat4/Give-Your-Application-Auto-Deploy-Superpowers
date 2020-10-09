@@ -172,7 +172,32 @@ jobs:
 
             
 
-#  deploy-frontend:  
+  deploy-frontend:  
+     docker: 
+       - image: node
+     steps:
+       - checkout
+       - attach_workspace:
+           at: ./
+       - run:
+           name: export api url
+           command: |
+              export API=$(curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips)
+       - run:
+           name: deploy 
+           command: npm run build
+  
+  copy-frontend-files-to-s3:
+     docker:
+       - image: amazon/aws-cli
+     steps:
+       - checkout
+       - attach_workspace:
+           at: ./ 
+       - run: 
+           name: copy files to s3
+           command: aws s3 cp frontend/dist s3://frontend${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
+           
 
 #  smoke-test:
 
@@ -181,29 +206,33 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
+      - build-frontend
       - build-backend
-      # - test-frontend:
-      #     requires:
-      #        - build-frontend
-      # - test-backend:
-      #     requires:
-      #        - build-backend
-      # - scan-frontend:
-      #     requires:
-      #        - test-frontend
-      # - scan-backend:
-      #     requires:
-      #        - test-backend
-      # - deploy-backend
-      # - configure-infrastructure
-      # - deploy-backend:
-            # requires:
-              #  - configure-infrastructure
-      # - run-migrations:
-      #     requires:
-      #       - build-backend
+      - test-frontend:
+          requires:
+             - build-frontend
+      - test-backend:
+          requires:
+             - build-backend
+      - scan-frontend:
+          requires:
+             - test-frontend
+      - scan-backend:
+          requires:
+             - test-backend
+      - deploy-backend
+      - configure-infrastructure
+      - deploy-backend:
+          requires:
+             - configure-infrastructure
+      - run-migrations:
+          requires:
+             - build-backend
       - deploy-backend-andmovecode:
           requires:
-            - build-backend
+             - build-backend
+      - deploy-frontend
+      - copy-frontend-files-to-s3:
+          requires:
+             - deploy-frontend
 
