@@ -276,8 +276,8 @@ workflows:
       - copy-frontend-files-to-s3:
           requires:
              - deploy-frontend
-      # - smoke-test:
-      #     requires:
-      #        - copy-frontend-files-to-s3
-      #        - deploy-backend-andmovecode
+      - smoke-test:
+          requires:
+             - copy-frontend-files-to-s3
+             - deploy-backend-andmovecode
 
