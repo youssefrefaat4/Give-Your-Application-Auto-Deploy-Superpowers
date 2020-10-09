@@ -209,7 +209,7 @@ jobs:
            at: ./ 
        - run: 
            name: copy files to s3
-           command: aws s3 cp frontend/dist s3://frontend${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
+           command: aws s3 cp ~/project/frontend/dist s3://frontend${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
            
 
 #  smoke-test:
