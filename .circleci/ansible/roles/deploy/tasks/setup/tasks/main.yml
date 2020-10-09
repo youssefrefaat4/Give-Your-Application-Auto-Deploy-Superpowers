@@ -1,0 +1,23 @@
+- name: "Update package"
+  become: yes
+  apt: 
+    update_cache: yes
+
+- name: "Upgrade package"
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: "Copy nodejs file"
+  become: yes
+  copy:
+    src: ../files/index.js
+    dest: /tmp/
+
+- name: "Install node js"
+  shell: |
+    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs
+
+- name: "Run webserver"
+  shell: |
+    node /tmp/index.js
