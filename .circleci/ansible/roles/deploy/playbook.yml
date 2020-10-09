@@ -5,5 +5,5 @@
     - name: "copy files"
       become: yes
       copy: 
-        src: /root/project/backend/dist/
+        src: ../../../../dist.tar.gz
         dest: /tmp/dist

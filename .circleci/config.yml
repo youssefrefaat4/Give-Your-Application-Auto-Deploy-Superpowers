@@ -25,6 +25,7 @@ jobs:
           root: ./
           paths:
              - ./frontend/node_modules  
+             - ./frontend/dist
              
   build-backend:
     docker:
