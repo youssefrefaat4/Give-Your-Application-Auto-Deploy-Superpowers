@@ -17,7 +17,7 @@
         curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs
     
     - name: "Set enviroment variables"
-      command: |
+      shell: |
          export ENVIRONMENT=production
          export TYPEORM_CONNECTION=postgres
          export TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
