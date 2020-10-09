@@ -94,10 +94,10 @@ jobs:
       - image: amazon/aws-cli
     steps: 
       - checkout
-      - run:
-          name: create stack for backend
-          command: |
-              aws cloudformation deploy --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
+      # - run:
+      #     name: create stack for backend
+      #     command: |
+      #         aws cloudformation deploy --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
       - run:
           name: save ips
           command: | 
@@ -105,7 +105,7 @@ jobs:
               aws ec2 describe-instances  --query 'Reservations[*].Instances[*].PublicIpAddress' --output=text > ~/inventory.txt 
       - run:
           name: confirm ip files
-          command: cat ./inventory.txt
+          command: pwd | cat ~/inventory.txt
       - run:
           name: create S3 bucket for frontend
           command: aws s3api create-bucket --bucket "frontend${CIRCLE_WORKFLOW_ID:0:7}" --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
