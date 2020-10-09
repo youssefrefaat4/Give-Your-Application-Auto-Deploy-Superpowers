@@ -183,22 +183,22 @@ jobs:
             
 
   deploy-frontend:  
-     docker: 
-       - image: node
-     steps:
-       - checkout
-       - run:
-           name: export api url
-           command: |
-              export API=$(curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips)
-       - run:
-           name: deploy 
-           command: cd ~/project/frontend && npm i && npm run build
-      - persist_to_workspace:
-          root: ./
-          paths:
-             - ./frontend/node_modules  
-             - ./frontend/dist
+      docker: 
+        - image: node
+      steps:
+        - checkout
+        - run:
+            name: export api url
+            command: |
+               export API=$(curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips)
+        - run:
+            name: deploy 
+            command: cd ~/project/frontend && npm i && npm run build
+        - persist_to_workspace:
+           root: ./
+           paths:
+              - ./frontend/node_modules  
+              - ./frontend/dist
   
   copy-frontend-files-to-s3:
      docker:
