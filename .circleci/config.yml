@@ -204,7 +204,7 @@ jobs:
        - checkout
        - run:
            name: add tar
-           command: apk add tar
+           command: yum install -y tar gzip
        - attach_workspace:
            at: ./ 
        - run: 
