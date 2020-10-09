@@ -165,7 +165,7 @@ jobs:
         - run:
             name: check list dist
             command: |
-                ls -al /root/project/backend
+                ls -al ./
         - run:
             name: copy dist files ansible
             command: |
