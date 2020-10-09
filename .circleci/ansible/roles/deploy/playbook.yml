@@ -6,4 +6,9 @@
       become: yes
       copy: 
         src: ../../../../dist.tar.gz
-        dest: /tmp/dist
+        dest: /tmp/
+    - name: Unarchive a file that is already on the remote machine
+      unarchive:
+        src: /tmp/dist.tar.gz
+        dest: /tmp/
+        remote_src: yes
