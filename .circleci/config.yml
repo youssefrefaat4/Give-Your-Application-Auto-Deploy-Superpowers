@@ -220,7 +220,7 @@ jobs:
 
   smoke-test:
      docker:
-       - image: 
+       - image: amazon/aws-cli
      steps: 
        - run:
            name: smoketest for backend
