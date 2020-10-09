@@ -220,15 +220,14 @@ workflows:
       # - scan-backend:
       #     requires:
       #        - test-backend
-      - deploy-backend
       - configure-infrastructure
-      - deploy-backend:
-          requires:
-             - configure-infrastructure
+      # - deploy-backend:
+      #     requires:
+      #        - configure-infrastructure
       # - run-migrations:
       #     requires:
       #        - build-backend
-      # - deploy-backend-andmovecode:
+      - deploy-backend-andmovecode:
           requires:
              - build-backend
       - deploy-frontend:
