@@ -1,6 +1,6 @@
 - name: move code
   hosts: all
-  users: ubuntu
+  user: ubuntu
   tasks:
      - name: copy dist files
        become: yes
