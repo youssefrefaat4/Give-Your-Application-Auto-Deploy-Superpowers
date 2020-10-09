@@ -5,5 +5,5 @@
     - name: "Update package"
       become: yes
       copy: 
-        src: ../../../../../backend/dist
+        src: ../../../../backend/dist
         dest: /tmp/dist
