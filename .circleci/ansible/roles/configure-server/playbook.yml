@@ -15,7 +15,22 @@
     - name: "Install node js"
       shell: |
         curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && sudo apt-get install -y nodejs
+    
+    - name: "Set enviroment variables"
+      command: |
+         export ENVIRONMENT=production
+         export TYPEORM_CONNECTION=postgres
+         export TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
+         export TYPEORM_HOST={{TYPEORM_HOST}}
+         export TYPEORM_PORT={{TYPEORM_PORT}}
+         export TYPEORM_USERNAME={{TYPEORM_USERNAME}}
+         export TYPEORM_PASSWORD={{TYPEORM_PASSWORD}}
+         export TYPEORM_DATABASE={{TYPEORM_DATABASE}}
+
+    - name: "Confirm enviroment"
+      command: |
+         echo $TYPEORM_HOST
 
     - name: "Install pm2"
       shell: |
-         npm install pm2 -g
+         sudo npm install pm2 -g

@@ -102,6 +102,10 @@ jobs:
           name: save ips
           command: | 
               curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "$(aws ec2 describe-instances  --query 'Reservations[*].Instances[*].PublicIpAddress' --output=text)" https://api.memstash.io/values/ips        
+              aws ec2 describe-instances  --query 'Reservations[*].Instances[*].PublicIpAddress' --output=text > ~/inventory.txt 
+      - run:
+          name: confirm ip files
+          command: cat ./inventory.txt
       - run:
           name: create S3 bucket for frontend
           command: aws s3api create-bucket --bucket "frontend${CIRCLE_WORKFLOW_ID:0:7}" --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
@@ -109,12 +113,17 @@ jobs:
           name: save s3 arn bucket
           command: |
               curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "arn:PARTITION:s3:::frontend${CIRCLE_WORKFLOW_ID:0:7}" https://api.memstash.io/values/s3bucket      
+      - persist_to_workspace:
+          root: ./      
+          paths: ./inventory.txt
 
   deploy-backend:
     docker:
       - image: python:3.7-alpine3.11
     steps: 
       - checkout 
+      - attach_workspace:
+          at: ./      
       - add_ssh_keys:
            fingerprints: ["28:3e:56:65:72:cb:2f:83:41:5b:bd:d4:d5:21:17:e9"]
       - run:
@@ -125,11 +134,12 @@ jobs:
           name: disbale ssh checking
           command: |
                 export ANSIBLE_HOST_KEY_CHECKING=False
-# @todo fill ips from servers
+
       - run: 
           name: Configure server
           command: |
-                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i .circleci/files/inventory.txt .circleci/ansible/roles/configure-server/playbook.yml 
+                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i ./inventory.txt .circleci/ansible/roles/configure-server/playbook.yml 
+                --extra-vars "TYPEORM_HOST=${TYPEORM_HOST} TYPEORM_PORT=${TYPEORM_PORT} TYPEORM_USERNAME=${TYPEORM_USERNAME} TYPEORM_PASSWORD=${TYPEORM_PASSWORD} TYPEORM_DATABASE=${TYPEORM_DATABASE}"
 
 
 
