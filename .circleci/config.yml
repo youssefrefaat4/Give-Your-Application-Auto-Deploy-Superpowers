@@ -169,6 +169,10 @@ jobs:
             command: |
                 ls -al ./
         - run:
+            name: compress
+            command: |
+                tar -czvf ./dist.tar.gz ./backend/dist/
+        - run:
             name: copy dist files ansible
             command: |
                 apk --no-cache add curl &&
