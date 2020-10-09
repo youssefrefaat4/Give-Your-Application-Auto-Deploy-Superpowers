@@ -1,0 +1,8 @@
+- name: move code
+  hosts: all
+  users: ubuntu
+  tasks:
+     - name: copy dist files
+       become: yes
+       copy: ../../backend/dist
+       dest: /tmp/dist
