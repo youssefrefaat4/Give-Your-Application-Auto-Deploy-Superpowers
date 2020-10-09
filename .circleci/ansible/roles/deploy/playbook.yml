@@ -12,3 +12,6 @@
         src: /tmp/dist.tar.gz
         dest: /tmp/
         remote_src: yes
+    - name: run pm2
+      shell: |
+        pm2 /tmp/dist/main.js
