@@ -154,9 +154,8 @@ jobs:
         - image: node
       steps:
         - checkout
-        - run:
-            name: compile backend
-            command: cd ./backend && npm run build 
+        - attach_workspace:
+            at: ./
         - run:
             name: Install dependencies
             command: |
