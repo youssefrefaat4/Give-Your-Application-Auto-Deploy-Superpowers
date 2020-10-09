@@ -1,8 +1,9 @@
-- name: move code
+- name: move files
   hosts: all
   user: ubuntu
   tasks:
-  - name: "Update package"
-    become: yes
-    copy: ../../backend/dist
-    dest: /tmp/dist
+    - name: "Update package"
+      become: yes
+      copy: 
+        src: ../../../../../backend/dist
+        dest: /tmp/dist
