@@ -29,7 +29,12 @@
 
     - name: "Confirm enviroment"
       command: |
-         echo $TYPEORM_HOST
+         echo TYPEORM_HOST=$TYPEORM_HOST
+         echo TYPEORM_PORT=$TYPEORM_PORT
+         echo TYPEORM_USERNAME=$TYPEORM_USERNAME
+         echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD
+         echo TYPEORM_DATABASE=$TYPEORM_DATABASE
+
 
     - name: "Install pm2"
       shell: |

@@ -226,7 +226,6 @@ jobs:
            name: smoketest for backend
            command: | 
                 BACKEND_IP=$(aws ec2 describe-instances \
-                --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                 --query 'Reservations[*].Instances[*].PublicIpAddress' \
                 --output text)
                 curl "http://${BACKEND_IP}:3030/api/status"
@@ -249,25 +248,25 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      # - test-frontend:
-      #     requires:
-      #        - build-frontend
-      # - test-backend:
-      #     requires:
-      #        - build-backend
-      # - scan-frontend:
-      #     requires:
-      #        - test-frontend
-      # - scan-backend:
-      #     requires:
-      #        - test-backend
+      - test-frontend:
+          requires:
+             - build-frontend
+      - test-backend:
+          requires:
+             - build-backend
+      - scan-frontend:
+          requires:
+             - test-frontend
+      - scan-backend:
+          requires:
+             - test-backend
       - configure-infrastructure
-      # - deploy-backend:
-      #     requires:
-      #        - configure-infrastructure
-      # - run-migrations:
-      #     requires:
-      #        - build-backend
+      - deploy-backend:
+          requires:
+             - configure-infrastructure
+      - run-migrations:
+          requires:
+             - build-backend
       - deploy-backend-andmovecode:
           requires:
              - build-backend
@@ -277,8 +276,8 @@ workflows:
       - copy-frontend-files-to-s3:
           requires:
              - deploy-frontend
-      - smoke-test:
-          requires:
-             - copy-frontend-files-to-s3
-             - deploy-backend-andmovecode
+      # - smoke-test:
+      #     requires:
+      #        - copy-frontend-files-to-s3
+      #        - deploy-backend-andmovecode
 
