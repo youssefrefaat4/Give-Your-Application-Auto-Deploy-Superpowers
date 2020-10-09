@@ -94,10 +94,10 @@ jobs:
       - image: amazon/aws-cli
     steps: 
       - checkout
-      - run:
-          name: create stack for backend
-          command: |
-              aws cloudformation deploy --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
+      # - run:
+      #     name: create stack for backend
+      #     command: |
+      #         aws cloudformation deploy --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
       - run:
           name: save ips
           command: | 
@@ -168,7 +168,7 @@ jobs:
                 apk --no-cache add curl &&
                 echo [all] > ~/inventory.txt &&
                 curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips >> ~/inventory.txt && 
-                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i ~/inventory.txt .circleci/ansible/roles/deploy/tasks/playbook.yml
+                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i ~/inventory.txt .circleci/ansible/roles/deploy/playbook.yml
 
             
 
@@ -208,18 +208,18 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - test-frontend:
-          requires:
-             - build-frontend
-      - test-backend:
-          requires:
-             - build-backend
-      - scan-frontend:
-          requires:
-             - test-frontend
-      - scan-backend:
-          requires:
-             - test-backend
+      # - test-frontend:
+      #     requires:
+      #        - build-frontend
+      # - test-backend:
+      #     requires:
+      #        - build-backend
+      # - scan-frontend:
+      #     requires:
+      #        - test-frontend
+      # - scan-backend:
+      #     requires:
+      #        - test-backend
       - deploy-backend
       - configure-infrastructure
       - deploy-backend:
