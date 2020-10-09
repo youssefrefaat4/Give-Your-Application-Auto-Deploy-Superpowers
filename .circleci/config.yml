@@ -163,6 +163,10 @@ jobs:
             command: |
                 apk add --update ansible
         - run:
+            name: check list dist
+            command: |
+                ls -al /root/project/backend
+        - run:
             name: copy dist files ansible
             command: |
                 apk --no-cache add curl &&
