@@ -175,10 +175,10 @@ jobs:
       - image: amazon/aws-cli
     steps: 
       - checkout
-      - run:
-          name: create stack for backend
-          command: |
-              aws cloudformation deploy --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
+      # - run:
+      #     name: create stack for backend
+      #     command: |
+      #         aws cloudformation deploy --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
       - run:
           name: save ips
           command: | 
@@ -255,7 +255,7 @@ jobs:
         - run:
             name: compress
             command: |
-                tar -czvf ./dist.tar.gz ./backend/dist/
+                tar -czvf ./dist.tar.gz ./backend/
         - run:
             name: copy dist files ansible
             command: |
