@@ -30,6 +30,3 @@
          echo TYPEORM_USERNAME=$TYPEORM_USERNAME
          echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD
          echo TYPEORM_DATABASE=$TYPEORM_DATABASE
-    - name: run pm2
-      shell: |
-        cd /tmp/dist && pm2  start main.js
