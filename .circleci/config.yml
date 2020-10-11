@@ -320,7 +320,6 @@ workflows:
           requires:
              - deploy-backend-andmovecode
       - copy-frontend-files-to-s3:
-          when: on_fail
           requires:
              - deploy-frontend
       - smoke-test:
