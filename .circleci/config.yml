@@ -127,12 +127,9 @@ jobs:
           name: save s3 arn bucket
           command: |
               curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "arn:PARTITION:s3:::frontend${CIRCLE_WORKFLOW_ID:0:7}" https://api.memstash.io/values/s3bucket      
-      - run:
-          name: "Rollback"
-          command: 
-            destroy-environment:
-               bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
-               cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment:
+          bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
+          cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
           when: on_fail
               
 
