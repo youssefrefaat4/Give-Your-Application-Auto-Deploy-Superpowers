@@ -8,6 +8,14 @@ version: 2.1
 #     description: Revert the last migration if successfully run in the current workflow.
 #     ...
 commands:
+  revert-migration:
+    description: Revert the last migration if successfully run in the current workflow.
+    steps:
+      - run:
+          name: "Revert migration"
+          command: npm run migrations:revert
+          when: on_fail
+
   destroy-environment:
     description: "destroy environment s3 bucket and delete cloudformation stack"
     parameters:
@@ -22,10 +30,12 @@ commands:
           name: "Delete S3 Bucket"
           command: |
                aws s3api delete-bucket --bucket "<< parameters.bucket_name >>" --region "eu-central-1"
+          when: on_fail
       - run:
           name: "Delete Cloudformation Stack"
           command: |
                aws cloudformation delete-stack --stack-name << parameters.cf_stack >>
+          when: on_fail
 
 jobs:
   build-frontend:
@@ -48,6 +58,18 @@ jobs:
       - image: node
     steps:
       - checkout
+      - run:
+          name: "create .env"
+          command: |
+              echo ENVIRONMENT=production > ~/project/backend/.env
+              echo TYPEORM_DATABASE=postgres >> ~/project/backend/.env
+              echo TYPEORM_CONNECTION=postgres >> ~/project/backend/.env
+              echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ~/project/backend/.env
+              echo TYPEORM_HOST=${TYPEORM_HOST} >> ~/project/backend/.env
+              echo TYPEORM_PORT=${TYPEORM_PORT} >> ~/project/backend/.env
+              echo TYPEORM_USERNAME=${TYPEORM_USERNAME} >> ~/project/backend/.env
+              echo TYPEORM_PASSWORD=${TYPEORM_PASSWORD} >> ~/project/backend/.env
+              echo TYPEORM_DATABASE=${TYPEORM_DATABASE} >> ~/project/backend/.env
       - run:
           name: "compile and build"
           command: |
@@ -127,12 +149,9 @@ jobs:
           name: save s3 arn bucket
           command: |
               curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "arn:PARTITION:s3:::frontend${CIRCLE_WORKFLOW_ID:0:7}" https://api.memstash.io/values/s3bucket      
-      - when:
-          condition: on_fail
-          steps:
-            - destroy-environment:
-                 bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
-                 cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment:
+          bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
+          cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
               
 
 
@@ -239,7 +258,9 @@ jobs:
        - run: 
            name: copy files to s3
            command: aws s3 cp ~/project/frontend/dist s3://frontend${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
-           
+       - destroy-environment:
+           bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
+           cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"    
 
   smoke-test:
      docker:
@@ -263,7 +284,9 @@ jobs:
                 else
                 return 0
                 fi
-
+       - destroy-environment:
+           bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
+           cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
 #  cloudfront-update:
 
 workflows:
@@ -297,6 +320,7 @@ workflows:
           requires:
              - deploy-backend-andmovecode
       - copy-frontend-files-to-s3:
+          when: on_fail
           requires:
              - deploy-frontend
       - smoke-test:
