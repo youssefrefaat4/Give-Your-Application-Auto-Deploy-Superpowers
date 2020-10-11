@@ -24,7 +24,7 @@
          export TYPEORM_DATABASE={{TYPEORM_DATABASE}}
 
     - name: "Confirm enviroment"
-      command: |
+      shell: |
          echo TYPEORM_HOST=$TYPEORM_HOST
          echo TYPEORM_PORT=$TYPEORM_PORT
          echo TYPEORM_USERNAME=$TYPEORM_USERNAME
@@ -32,5 +32,5 @@
          echo TYPEORM_DATABASE=$TYPEORM_DATABASE
 
     - name: "run server"
-      command: |
+      shell: |
          cd /tmp/backend && sudo pm2 start npm -- run "start"
