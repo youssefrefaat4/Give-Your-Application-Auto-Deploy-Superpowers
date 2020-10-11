@@ -184,7 +184,7 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "$(aws ec2 describe-instances  --query 'Reservations[*].Instances[*].PublicIpAddress' --output=text)" https://api.memstash.io/values/ips        
       - run:
           name: create S3 bucket for frontend
-          command: 
+          command: |
                echo '{
               "Version": "2012-10-17",
               "Statement": [
