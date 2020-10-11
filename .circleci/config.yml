@@ -9,13 +9,14 @@ version: 2.1
 #     ...
 commands:
   destroy-environment:
-    bucket_name:
-      type: string
-      default: ""
-    cf_stack:
-      type: string
-      default: ""
-        
+    description: "destroy environment s3 bucket and delete cloudformation stack"
+    parameters:
+      bucket_name:
+        type: string
+        default: ""
+      cf_stack:
+        type: string
+        default: "" 
     steps:
       - run:
           name: "Delete S3 Bucket"
