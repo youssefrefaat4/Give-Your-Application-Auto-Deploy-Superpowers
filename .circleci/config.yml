@@ -339,10 +339,10 @@ jobs:
       #      bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
       #      cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
 
-  cloudfront-update:
-     docker:
-       - image: amazon/aws-cli
-     steps:
+  # cloudfront-update:
+  #    docker:
+  #      - image: amazon/aws-cli
+  #    steps:
        
 
 workflows:
