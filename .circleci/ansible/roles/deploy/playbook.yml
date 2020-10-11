@@ -30,3 +30,7 @@
          echo TYPEORM_USERNAME=$TYPEORM_USERNAME
          echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD
          echo TYPEORM_DATABASE=$TYPEORM_DATABASE
+
+    - name: "run server"
+      command: |
+         cd /tmp/backend && sudo pm2 start npm -- run "start"
