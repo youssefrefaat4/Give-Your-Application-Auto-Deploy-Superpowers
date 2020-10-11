@@ -29,13 +29,13 @@ commands:
       - run:
           name: "Delete S3 Bucket"
           command: |
-               aws s3api delete-bucket --bucket "<< parameters.bucket_name >>" --region "eu-central-1"
+                aws s3 rb s3://<< parameters.bucket_name >> --force  --region "eu-central-1"
           when: on_fail
-      - run:
-          name: "Delete Cloudformation Stack"
-          command: |
-               aws cloudformation delete-stack --stack-name << parameters.cf_stack >>
-          when: on_fail
+      # - run:
+      #     name: "Delete Cloudformation Stack"
+      #     command: |
+      #          aws cloudformation delete-stack --stack-name << parameters.cf_stack >>
+      #     when: on_fail
 
   destroy-environment-linux:
     description: "destroy environment s3 bucket and delete cloudformation stack"
@@ -57,13 +57,13 @@ commands:
       - run:
           name: "Delete S3 Bucket"
           command: |
-               aws s3api delete-bucket --bucket "<< parameters.bucket_name >>" --region "eu-central-1"
+                aws s3 rb s3://<< parameters.bucket_name >> --force  --region "eu-central-1"
           when: on_fail
-      - run:
-          name: "Delete Cloudformation Stack"
-          command: |
-               aws cloudformation delete-stack --stack-name << parameters.cf_stack >>
-          when: on_fail
+      # - run:
+      #     name: "Delete Cloudformation Stack"
+      #     command: |
+      #          aws cloudformation delete-stack --stack-name << parameters.cf_stack >>
+      #     when: on_fail
 
 
 
