@@ -184,7 +184,22 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "$(aws ec2 describe-instances  --query 'Reservations[*].Instances[*].PublicIpAddress' --output=text)" https://api.memstash.io/values/ips        
       - run:
           name: create S3 bucket for frontend
-          command: aws s3api create-bucket --bucket "frontend${CIRCLE_WORKFLOW_ID:0:7}" --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
+          command: 
+               echo '{
+              "Version": "2012-10-17",
+              "Statement": [
+                  {
+                      "Sid": "PublicReadGetObject",
+                      "Effect": "Allow",
+                      "Principal": "*",
+                      "Action": "s3:GetObject",
+                      "Resource": "arn:aws:s3:::frontend${CIRCLE_WORKFLOW_ID:0:7}/*"
+                  }
+              ]
+          }' > /tmp/bucket_policy.json
+            aws s3api create-bucket --bucket frontend${CIRCLE_WORKFLOW_ID:0:7} --region eu-central-1  --create-bucket-configuration LocationConstraint=eu-central-1 --profile equivalent \
+            && aws s3api put-bucket-policy --bucket frontend${CIRCLE_WORKFLOW_ID:0:7} --policy file:///tmp/bucket_policy.json --profile equivalent \
+            && aws s3 website s3://frontend${CIRCLE_WORKFLOW_ID:0:7}/ --index-document index.html --error-document error.html --profile equivalent
       - run:
           name: save s3 arn bucket
           command: |
@@ -274,7 +289,8 @@ jobs:
         - run:
             name: export api url
             command: |
-               export API=$(curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips)
+               export API_URL=$(curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips)
+               echo "API_URL=$API_URL" >>  ~/project/frontend/.env
         - run:
             name: deploy 
             command: cd ~/project/frontend && npm i && npm run build
@@ -322,7 +338,7 @@ jobs:
        - run:
            name: smoketest for frontend
            command: | 
-                URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
+                URL="http://frontend${CIRCLE_WORKFLOW_ID:0:7}.s3-website-eu-central-1.amazonaws.com/#/employees"            
                 if curl -s ${URL} | grep "Welcome"
                 then
                 return 1
