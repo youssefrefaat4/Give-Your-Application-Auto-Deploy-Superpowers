@@ -185,20 +185,21 @@ jobs:
       - run:
           name: create S3 bucket for frontend
           command: |
-               echo '{
-              "Version": "2012-10-17",
-              "Statement": [
+               echo "{
+              'Version': '2012-10-17',
+              'Statement': [
                   {
-                      "Sid": "PublicReadGetObject",
-                      "Effect": "Allow",
-                      "Principal": "*",
-                      "Action": "s3:GetObject",
-                      "Resource": "arn:aws:s3:::frontend${CIRCLE_WORKFLOW_ID:0:7}/*"
+                      'Sid': 'PublicReadGetObject',
+                      'Effect': 'Allow',
+                      'Principal': '*',
+                      'Action': 's3:GetObject',
+                      'Resource': 'arn:aws:s3:::frontend${CIRCLE_WORKFLOW_ID:0:7}/*'
                   }
               ]
-          }' > /tmp/bucket_policy.json
-            aws s3api create-bucket --bucket frontend${CIRCLE_WORKFLOW_ID:0:7} --region eu-central-1  --create-bucket-configuration LocationConstraint=eu-central-1 --profile equivalent \
-            && aws s3api put-bucket-policy --bucket frontend${CIRCLE_WORKFLOW_ID:0:7} --policy file:///tmp/bucket_policy.json --profile equivalent \
+          }" > /tmp/bucket_policy.json
+
+            && aws s3api create-bucket --bucket frontend${CIRCLE_WORKFLOW_ID:0:7} --region eu-central-1  --create-bucket-configuration LocationConstraint=eu-central-1 --profile equivalent 
+            && aws s3api put-bucket-policy --bucket frontend${CIRCLE_WORKFLOW_ID:0:7} --policy file:///tmp/bucket_policy.json --profile equivalent 
             && aws s3 website s3://frontend${CIRCLE_WORKFLOW_ID:0:7}/ --index-document index.html --error-document error.html --profile equivalent
       - run:
           name: save s3 arn bucket
