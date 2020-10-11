@@ -3,13 +3,29 @@ version: 2.1
 ### It's a good practice to keep your commands at the top of the config file. In this project, you'll need at least 2 commands:
 
 # commands:
-#   destroy-environment:
-#     description: Destroy backend and frontend cloudformation stacks given a workflow ID.
-#     ...
 
 #   revert-migration:
 #     description: Revert the last migration if successfully run in the current workflow.
 #     ...
+commands:
+  rollback:
+    destroy-environment:
+      bucket_name:
+        type: string
+        default: ""
+      cf_stack:
+        type: string
+        default: ""
+        
+    steps:
+      - run:
+          name: "Delete S3 Bucket"
+          command: |
+               aws s3api delete-bucket --bucket "<< parameters.bucket_name >>" --region "eu-central-1"
+      - run:
+          name: "Delete Cloudformation Stack"
+          command: |
+               aws cloudformation delete-stack --stack-name << parameters.cf_stack >>
 
 jobs:
   build-frontend:
@@ -96,10 +112,10 @@ jobs:
       - image: amazon/aws-cli
     steps: 
       - checkout
-      # - run:
-      #     name: create stack for backend
-      #     command: |
-      #         aws cloudformation deploy --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
+      - run:
+          name: create stack for backend
+          command: |
+              aws cloudformation deploy --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/backend.yml --capabilities CAPABILITY_NAMED_IAM
       - run:
           name: save ips
           command: | 
@@ -111,6 +127,11 @@ jobs:
           name: save s3 arn bucket
           command: |
               curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "arn:PARTITION:s3:::frontend${CIRCLE_WORKFLOW_ID:0:7}" https://api.memstash.io/values/s3bucket      
+      - run:
+          name: Rollback
+          command: 
+          when: on_fail
+              
 
 
   deploy-backend:
@@ -178,7 +199,7 @@ jobs:
                 apk --no-cache add curl &&
                 echo [all] > ~/inventory.txt &&
                 curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips >> ~/inventory.txt && 
-                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i ~/inventory.txt .circleci/ansible/roles/deploy/playbook.yml
+                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i ~/inventory.txt .circleci/ansible/roles/deploy/playbook.yml --extra-vars "TYPEORM_HOST=${TYPEORM_HOST} TYPEORM_PORT=${TYPEORM_PORT} TYPEORM_USERNAME=${TYPEORM_USERNAME} TYPEORM_PASSWORD=${TYPEORM_PASSWORD} TYPEORM_DATABASE=${TYPEORM_DATABASE}"
 
             
 
