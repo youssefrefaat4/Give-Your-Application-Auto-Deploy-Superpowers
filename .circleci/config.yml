@@ -312,24 +312,25 @@ jobs:
      docker:
        - image: amazon/aws-cli
      steps: 
-      #  - run:
-      #      name: smoketest for backend
-      #      command: | 
-      #           BACKEND_IP=$(aws ec2 describe-instances \
-      #           --query 'Reservations[*].Instances[*].PublicIpAddress' \
-      #           --output text)
-      #           curl "http://${BACKEND_IP}:3030/api/status"
+       - run:
+           name: smoketest for backend
+           command: | 
+                BACKEND_IP=$(aws ec2 describe-instances \
+                --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                --output text)
+                curl "http://${BACKEND_IP}:3030/api/status"
 
        - run:
            name: smoketest for frontend
            command: | 
-                URL="http://frontend${CIRCLE_WORKFLOW_ID:0:7}.s3.eu-central-1.amazonaws.com/index.html#/employees"            
+                URL="http://frontend${CIRCLE_WORKFLOW_ID:0:7}.s3.eu-central-1.amazonaws.com/index.html#/employees"    
                 URL="http://frontendc133e1b.s3-website.eu-central-1.amazonaws.com/#/employees"
-                if curl --output /dev/null --silent --head --fail "${URL}";
+        
+                if curl -s ${URL} | grep "Welcome"
                 then
-                return 0
+                  return 0
                 else
-                return 1
+                  return 1
                 fi
       #  - destroy-environment:
       #      bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
