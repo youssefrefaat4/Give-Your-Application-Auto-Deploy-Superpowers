@@ -339,11 +339,15 @@ jobs:
       #      bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
       #      cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
 
-  # cloudfront-update:
-  #    docker:
-  #      - image: amazon/aws-cli
-  #    steps:
-       
+  cloudfront-update:
+     docker:
+       - image: amazon/aws-cli
+     steps:
+       - checkout
+       - run:
+           name: update cloudformation
+           command: |
+               aws cloudformation deploy --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/cloudfront.yml --capabilities CAPABILITY_NAMED_IAM --tags project=udapeople
 
 workflows:
   default:
@@ -386,4 +390,7 @@ workflows:
           requires:
              - copy-frontend-files-to-s3
              - deploy-backend-andmovecode
+      - cloudfront-update:
+          requires:
+             - smoke-test
 
