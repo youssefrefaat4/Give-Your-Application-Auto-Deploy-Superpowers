@@ -407,6 +407,7 @@ workflows:
       - deploy-backend-andmovecode:
           requires:
              - build-backend
+             - deploy-backend
       - deploy-frontend:
           requires:
              - deploy-backend-andmovecode
