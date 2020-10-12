@@ -312,13 +312,13 @@ jobs:
      docker:
        - image: amazon/aws-cli
      steps: 
-       - run:
-           name: smoketest for backend
-           command: | 
-                BACKEND_IP=$(aws ec2 describe-instances \
-                --query 'Reservations[*].Instances[*].PublicIpAddress' \
-                --output text)
-                curl "http://${BACKEND_IP}:3030/api/status"
+      #  - run:
+      #      name: smoketest for backend
+      #      command: | 
+      #           BACKEND_IP=$(aws ec2 describe-instances \
+      #           --query 'Reservations[*].Instances[*].PublicIpAddress' \
+      #           --output text)
+      #           curl "http://${BACKEND_IP}:3030/api/status"
 
        - run:
            name: smoketest for frontend
