@@ -348,49 +348,74 @@ jobs:
            name: update cloudformation
            command: |
                aws cloudformation deploy --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/cloudfront.yml --capabilities CAPABILITY_NAMED_IAM --tags project=udapeople
+  run-prohmetuos-exporter:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps: 
+      - checkout 
+      - add_ssh_keys:
+           fingerprints: ["28:3e:56:65:72:cb:2f:83:41:5b:bd:d4:d5:21:17:e9"]
+      - run:
+          name: Install dependencies
+          command: |
+                apk add --update ansible
+      - run: 
+          name: disbale ssh checking
+          command: |
+                export ANSIBLE_HOST_KEY_CHECKING=False
+
+      - run: 
+          name: Configure server
+          command: |
+                apk --no-cache add curl && 
+                echo [all] > ~/inventory.txt &&
+                curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips >> ~/inventory.txt && 
+                export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i ~/inventory.txt .circleci/ansible/roles/configure-prometheus-node-exporter/playbook.yml"
+
 
 workflows:
   default:
     jobs:
-      - configure-infrastructure
-      - build-frontend:
-          requires:
-             - configure-infrastructure
-      - build-backend:
-          requires:
-             - configure-infrastructure
-      - test-frontend:
-          requires:
-             - build-frontend
-      - test-backend:
-          requires:
-             - build-backend
+      - run-prohmetuos-exporter
+      # - configure-infrastructure
+      # - build-frontend:
+      #     requires:
+      #        - configure-infrastructure
+      # - build-backend:
+      #     requires:
+      #        - configure-infrastructure
+      # - test-frontend:
+      #     requires:
+      #        - build-frontend
+      # - test-backend:
+      #     requires:
+      #        - build-backend
       # - scan-frontend:
       #     requires:
       #        - test-frontend
       # - scan-backend:
       #     requires:
       #        - test-backend
-      - deploy-backend:
-          requires:
-             - configure-infrastructure
-      - run-migrations:
-          requires:
-             - build-backend
-      - deploy-backend-andmovecode:
-          requires:
-             - build-backend
-      - deploy-frontend:
-          requires:
-             - deploy-backend-andmovecode
-      - copy-frontend-files-to-s3:
-          requires:
-             - deploy-frontend
-      - smoke-test:
-          requires:
-             - copy-frontend-files-to-s3
-             - deploy-backend-andmovecode
-      - cloudfront-update:
-          requires:
-             - smoke-test
+      # - deploy-backend:
+      #     requires:
+      #        - configure-infrastructure
+      # - run-migrations:
+      #     requires:
+      #        - build-backend
+      # - deploy-backend-andmovecode:
+      #     requires:
+      #        - build-backend
+      # - deploy-frontend:
+      #     requires:
+      #        - deploy-backend-andmovecode
+      # - copy-frontend-files-to-s3:
+      #     requires:
+      #        - deploy-frontend
+      # - smoke-test:
+      #     requires:
+      #        - copy-frontend-files-to-s3
+      #        - deploy-backend-andmovecode
+      # - cloudfront-update:
+      #     requires:
+      #        - smoke-test
 
