@@ -369,9 +369,7 @@ jobs:
           command: |
                 apk --no-cache add curl && 
                 echo [all] > ~/inventory.txt &&
-                $(aws ec2 describe-instances \
-                --query 'Reservations[*].Instances[*].PublicIpAddress' \
-                --output text) >> ~/inventory.txt && 
+                aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> ~/inventory.txt && 
                 cat ~/inventory.txt &&
                 export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook  -i ~/inventory.txt .circleci/ansible/roles/configure-prometheus-node-exporter/playbook.yml
 
