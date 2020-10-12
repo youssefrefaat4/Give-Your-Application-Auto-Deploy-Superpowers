@@ -307,31 +307,37 @@ jobs:
        - destroy-environment:
            bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
            cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"    
-
-  smoke-test:
+  smoke-test-frontend:
+    docker:
+       - image:  alpine:latest
+    steps:
+       - run:  apk add --update curl
+       - run: 
+           name: smoke test.
+           command: |
+              URL="http://frontend${CIRCLE_WORKFLOW_ID:0:7}.s3.eu-central-1.amazonaws.com/index.html#/employees"    
+              URL="http://frontendc133e1b.s3-website.eu-central-1.amazonaws.com/#/employees"
+              if curl -s --head ${URL}
+              then
+               return 0
+              else
+               return 1
+              fi
+      #  - destroy-environment:
+      #      bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
+      #      cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+  smoke-test-backend:
      docker:
        - image: amazon/aws-cli
      steps: 
-      #  - run:
-      #      name: smoketest for backend
-      #      command: | 
-      #           BACKEND_IP=$(aws ec2 describe-instances \
-      #           --query 'Reservations[*].Instances[*].PublicIpAddress' \
-      #           --output text)
-      #           curl "http://${BACKEND_IP}:3030/api/status"
-
        - run:
-           name: smoketest for frontend
+           name: smoketest for backend
            command: | 
-                URL="http://frontend${CIRCLE_WORKFLOW_ID:0:7}.s3.eu-central-1.amazonaws.com/index.html#/employees"    
-                URL="http://frontendc133e1b.s3-website.eu-central-1.amazonaws.com/#/employees"
-        
-                if curl -s ${URL} | grep "Welcome"
-                then
-                  return 0
-                else
-                  return 1
-                fi
+                BACKEND_IP=$(aws ec2 describe-instances \
+                --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                --output text)
+                curl "http://${BACKEND_IP}:3030/api/status"
+
       #  - destroy-environment:
       #      bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
       #      cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
@@ -373,7 +379,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - smoke-test
+      - smoke-test-frontend
       # - configure-infrastructure
       # - build-frontend:
       #     requires:
@@ -408,13 +414,18 @@ workflows:
       # - copy-frontend-files-to-s3:
       #     requires:
       #        - deploy-frontend
-      # - smoke-test:
+      # - smoke-test-backend:
+      #     requires:
+      #        - copy-frontend-files-to-s3
+      #        - deploy-backend-andmovecode
+      # - smoke-test-frontend:
       #     requires:
       #        - copy-frontend-files-to-s3
       #        - deploy-backend-andmovecode
       # - cloudfront-update:
       #     requires:
-      #        - smoke-test
+      #        - smoke-test-frontend
+      #        - smoke-test-backend
       # - run-prohmetuos-exporter
       #     requires:
       #        - cloudfront-update
