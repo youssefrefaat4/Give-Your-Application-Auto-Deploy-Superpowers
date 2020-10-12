@@ -425,7 +425,7 @@ workflows:
           requires:
              - smoke-test-frontend
              - smoke-test-backend
-      - run-prohmetuos-exporter
+      - run-prohmetuos-exporter:
           requires:
              - cloudfront-update
 
