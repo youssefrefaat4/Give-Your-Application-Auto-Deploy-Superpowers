@@ -328,14 +328,12 @@ jobs:
            cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
   smoke-test-backend:
      docker:
-       - image: amazon/aws-cli
+       - image:  alpine:latest
      steps: 
        - run:
            name: smoketest for backend
            command: | 
-                BACKEND_IP=$(aws ec2 describe-instances \
-                --query 'Reservations[*].Instances[*].PublicIpAddress' \
-                --output text)
+                BACKEND_IP=$(curl -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request GET https://api.memstash.io/values/ips)
                 curl "http://${BACKEND_IP}:3030/api/status"
 
        - destroy-environment:
