@@ -323,9 +323,9 @@ jobs:
               else
                return 1
               fi
-      #  - destroy-environment:
-      #      bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
-      #      cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+       - destroy-environment:
+           bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
+           cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
   smoke-test-backend:
      docker:
        - image: amazon/aws-cli
@@ -338,9 +338,9 @@ jobs:
                 --output text)
                 curl "http://${BACKEND_IP}:3030/api/status"
 
-      #  - destroy-environment:
-      #      bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
-      #      cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+       - destroy-environment:
+           bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
+           cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
 
   cloudfront-update:
      docker:
@@ -350,7 +350,7 @@ jobs:
        - run:
            name: update cloudformation
            command: |
-               aws cloudformation deploy --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/cloudfront.yml --capabilities CAPABILITY_NAMED_IAM --tags project=udapeople
+               aws cloudformation deploy --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides WorkflowID="c133e1b" --template-file ~/project/.circleci/files/cloudfront.yml --capabilities CAPABILITY_NAMED_IAM --tags project=udapeople
   run-prohmetuos-exporter:
     docker:
       - image: python:3.7-alpine3.11
@@ -379,7 +379,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - smoke-test-frontend
+        - cloudfront-update
       # - configure-infrastructure
       # - build-frontend:
       #     requires:
