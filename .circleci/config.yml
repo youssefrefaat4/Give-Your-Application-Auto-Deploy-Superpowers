@@ -351,6 +351,16 @@ jobs:
            name: update cloudformation
            command: |
                aws cloudformation deploy --stack-name "udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" --template-file ~/project/.circleci/files/cloudfront.yml --capabilities CAPABILITY_NAMED_IAM --tags project=udapeople
+       - run:
+           name: delete old stacks of cloudfront, cloudformation, and S3 bucket
+           command: |
+               aws s3 rb s3://frontend${OLD_WORKFLOW_ID} --force  --region "eu-central-1"
+               aws cloudformation delete-stack --stack-name  udapeople-backend-${OLD_WORKFLOW_ID}
+               aws cloudformation delete-stack --stack-name  udapeople-cloudfront-${OLD_WORKFLOW_ID}
+       - destroy-environment:
+           bucket_name: "frontend${CIRCLE_WORKFLOW_ID:0:7}"
+           cf_stack: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+
   run-prohmetuos-exporter:
     docker:
       - image: python:3.7-alpine3.11
