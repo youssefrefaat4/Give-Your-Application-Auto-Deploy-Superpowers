@@ -1,10 +1,10 @@
 [URL01]
 https://github.com/Odai-Atef/Give-Your-Application-Auto-Deploy-Superpowers
 [URL02]
-http://frontendacc11ed.s3-website.eu-central-1.amazonaws.com/
+http://frontend54c6826.s3-website.eu-central-1.amazonaws.com/
 [URL03]
-http://d2vmc2g8vm0k4j.cloudfront.net
+d3k4syyohnbzh5.cloudfront.net
 [URL04]
-http://3.127.149.37:3030/api/status
+http://3.120.209.98:3030/api/status
 [URL05]
 http://ec2-18-193-75-8.eu-central-1.compute.amazonaws.com:9090/graph
