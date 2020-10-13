@@ -176,7 +176,7 @@ jobs:
       - run:
           name: save ips
           command: | 
-              curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "$(aws ec2 describe-instances  --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output=text)" https://api.memstash.io/values/ips        
+              curl -H "Content-Type: text/plain" -H "token: 0cd52177-868d-4982-ac51-f1e6b661064a" --request PUT --data "$(aws ec2 describe-instances  --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name, Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output=text)" https://api.memstash.io/values/ips        
       - run:
           name: create S3 bucket for frontend
           command: |
